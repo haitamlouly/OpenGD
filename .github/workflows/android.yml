@@ -20,15 +20,10 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Setup Android SDK & NDK
-        uses: android-actions/setup-android@v3
-        with:
-          cmdline-tools-version: '8.0'
-          accept-android-sdk-licenses: true
-
-      - name: Install NDK and CMake
+      - name: Install NDK and Build Tools
         run: |
-          ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager --install "ndk;25.2.9519653" "cmake;3.22.1"
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "ndk;25.2.9519653" "cmake;3.22.1" "build-tools;33.0.1"
 
       - name: Build Debug APK
         run: |
