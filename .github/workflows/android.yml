@@ -29,10 +29,5 @@ jobs:
         run: |
           cd proj.android
           chmod +x gradlew || true
-          ./gradlew assembleDebug --stacktrace
-
-      - name: Upload APK Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: game-debug-apk
-          path: proj.android/app/build/outputs/apk/debug/*.apk
+          echo "ndk.dir=$ANDROID_HOME/ndk/25.2.9519653" > local.properties
+          ./gradlew assembleDebug --no-daemon --info | grep -E "ERROR|FAILED|Exception|Caused by" -B 2 -A 5
