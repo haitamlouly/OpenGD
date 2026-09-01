@@ -20,11 +20,24 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Setup Android SDK
+      - name: Setup Android SDK & NDK
         uses: android-actions/setup-android@v3
+        with:
+          cmdline-tools-version: '8.0'
+          accept-android-sdk-licenses: true
 
-      - name: Build APK with Gradle
+      - name: Install NDK and CMake
+        run: |
+          ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager --install "ndk;25.2.9519653" "cmake;3.22.1"
+
+      - name: Build Debug APK
         run: |
           cd proj.android
           chmod +x gradlew || true
-          ./gradlew assembleRelease --stacktrace
+          ./gradlew assembleDebug --stacktrace
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: game-debug-apk
+          path: proj.android/app/build/outputs/apk/debug/*.apk
