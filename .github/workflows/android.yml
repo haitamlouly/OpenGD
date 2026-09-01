@@ -17,7 +17,6 @@ jobs:
 
       - name: Force sync submodules
         run: |
-          git submodule deinit -f --all || true
           git submodule update --init --recursive --force
 
       - name: Set up Python
@@ -33,7 +32,9 @@ jobs:
 
       - name: Setup Axmol Engine
         run: |
-          cd Source/axmol
+          SETUP_PATH=$(find . -name "setup.py" -path "*/axmol/*" -exec dirname {} \;)
+          echo "Found Axmol at $SETUP_PATH"
+          cd "$SETUP_PATH"
           python3 setup.py --s
 
       - name: Build APK via Gradle
